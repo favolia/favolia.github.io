@@ -406,7 +406,7 @@
                                         </svg>
                                     </div>
 
-                                        <input name="datePick" id="datePick" type="text" 
+                                        <input name="datePick" id="datePick" type="text" readonly
                                         :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
                                         class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
                                         placeholder="Pilih tanggal" :required="changeDate">
@@ -426,7 +426,7 @@
                                                 clip-rule="evenodd"></path>
                                         </svg>
                                     </div>
-                                    <input name="start" type="text" 
+                                    <input name="start" type="text" readonly
                                     :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
                                         class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
                                         placeholder="Awal" :required="!changeDate" autocomplete="false">
@@ -442,7 +442,7 @@
                                                 clip-rule="evenodd"></path>
                                         </svg>
                                     </div>
-                                    <input name="end" type="text"
+                                    <input name="end" type="text" readonly
                                     :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
                                         class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
                                         placeholder="Akhir" :required="!changeDate">
