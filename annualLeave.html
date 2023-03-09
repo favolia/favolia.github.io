@@ -163,51 +163,7 @@
                         <!-- notif here -->
                     </a>
 
-                    <span x-show="smallSidebarButton == false" id="dropdownMenu"
-                        @click="showDropdownOne = ! showDropdownOne"
-                        class=" text-xs cursor-pointer py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
-                                class="mr-3 w-3 text-center fa fa-list-ul"></i><span x-show=" ! smallSidebarButton"
-                                x-transition.delay.360ms>Dropdown</span></span>
-                        <span x-show=" ! smallSidebarButton" x-transition.delay.360ms class="flex gap-3">
-                            <span id=""
-                                class="notif h-4 w-4 font-bold flex justify-center items-center rounded-full text-[.70rem] pb-[.05rem] bg-green-500">5</span>
-                            <i id="dropdownMenuIcon"
-                                :class="showDropdownOne ? 'fa fa-sort-up translate-y-[.30rem]' : 'fa fa-sort-down -translate-y-[.10rem]' "></i>
-                        </span>
-                    </span>
-
-
-                    <!-- dropdown -->
-                    <div id=" dropdownMenuItem" x-show="showDropdownOne"
-                        class="lg:w-[90%] lg:translate-x-2 list-disc text-xs shadow-inner text-white/80 py-2 w-full rounded-md bg-slate-700/20 border border-t-blue-600 border-x-blue-600 border-b-red-500/10  px-2">
-
-                        <div class="flex flex-col gap-1">
-
-                            <a href="" class="font-medium"><i class="fa fa-link pr-1"></i>Menu</a>
-
-                            <details>
-                                <summary class="cursor-pointer"><span class="px-1 font-medium">More</span></summary>
-                                <div
-                                    class="p-1 flex flex-col [&>a]:rounded [&>a]:py-1 [&>a]:px-2 hover:[&>a]:bg-slate-300/40">
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                    <a href="" class="text-xs font-medium"><i
-                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
-                                </div>
-                            </details>
-
-                        </div>
-
-                    </div>
-                    <!-- end dropdown -->
+                        <!--                -->
 
                     <a href=""
                         class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
