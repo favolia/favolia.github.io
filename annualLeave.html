@@ -407,13 +407,13 @@
                         </span>
                         <!-- end bell notif -->
                     </span>
-                    <div class="flex flex-row justify-center items-center gap-2" id="profileMenu">
+                    <div class="flex flex-row justify-center items-center gap-2">
                         <div
                             class="avatar h-8 w-8 bg-slate-300 grid place-items-center border rounded-full overflow-hidden">
                             <img src="img/bannerPhoto.png" width="20px" alt="">
                         </div>
                         <span class="text-xs">Profile</span>
-                        <i class="fa fa-sort-down -translate-y-[.15rem] cursor-pointer"></i>
+                        <i id="profileMenu" class="fa fa-sort-down -translate-y-[.15rem] cursor-pointer"></i>
                     </div>
 
 
@@ -727,7 +727,7 @@
 
         tippy('#profileMenu', {
             content: profileMenuSection,
-            placement: 'bottom',
+            placement: 'bottom-end',
             interactive: true,
             allowHTML: true,
             arrow: false,
