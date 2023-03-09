@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/BosowaLogoB2.ico">
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.11.1/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.1.min.js" integrity="sha256-I1nTg78tSrZev3kjvfdM5A5Ak/blglGzlaZANLPDl3I=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/gh/dubrox/Multiple-Dates-Picker-for-jQuery-UI@master/jquery-ui.multidatespicker.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="datepicker.css">
+
+    <title>Permintaan Cuti</title>
+</head>
+
+<body x-data="{
+    smallSidebarButton: true,
+    showEmployeeDropdown: false,
+    showTimeAttendanceDropdown: false,
+    showDropdownOne: false,
+    leaveTypes: '',
+    pjs: '',
+    themeIndex: $persist(1),
+    themeBtn: false,
+    changeDate: false,
+}" >
+
+    <style>
+        .tippy-tooltip {
+            background-color: transparent;
+        }
+
+        aside::-webkit-scrollbar {
+            width: .07rem;
+            border-radius: .2rem;
+            background-color: transparent;
+        }
+
+        aside::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: .2rem;
+        }
+
+    </style>
+
+    <div class="min-h-screen w-full lg:flex lg:flex-row sm:flex-col">
+
+        <!-- sidebar -->
+        <aside id="menu" :class="smallSidebarButton ? 'lg:w-14' : 'lg:w-60' "
+            class="h-screen lg:sticky transition-all duration-500 ease-in-out -translate-x-full fixed top-0 lg:-translate-x-0 w-full bg-gradient-to-b from-blue-700 via-blue-600 to-red-400 overflow-y-scroll z-50 lg:z-50">
+
+            <div class="hris-logo w-full py-5 flex justify-center">
+
+                <!-- example logo -->
+                <div
+                    class="h-10 w-full ml-5 mr-7 lg:ml-0 lg:mr-0 py-2 italic font-bold flex lg:justify-center justify-between text-center text-white">
+
+                    <div class="flex justify-center items-center gap-2">
+                        <img src="img/BosowaLogo2.png" x-show="smallSidebarButton ? false : true " width="144">
+                        <img src="img/BosowaLogoB.png" x-show="smallSidebarButton ? true : false " width="30">
+                    </div>
+
+                    <span id="closeMenu" class="cursor-pointer lg:hidden scale-150">
+                        <i class="fa fa-angle-left"></i>
+                    </span>
+
+                </div>
+                <!-- end example logo -->
+
+            </div>
+
+            <!-- sidebar menu list -->
+            <div id="sidebarMenus" :class="smallSidebarButton ? 'px-3' : 'px-5' "
+                class="links transition-all duration-500 ease-in-out lg:pr-0 w-full pb-3">
+
+                <span class="text-white text-xs">
+                    <span x-show=" ! smallSidebarButton" x-transition.delay.360ms>Menu</span>
+                </span>
+                <div class="menu-link text-white w-full mt-1 flex flex-col gap-1">
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-th-large"></i>
+                            <span x-show=" ! smallSidebarButton" x-transition.delay.360ms>Dashboard</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <span @click="showEmployeeDropdown = ! showEmployeeDropdown"
+                        class=" text-xs cursor-pointer py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-list-ul"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Employee</span></span>
+                        <span x-show=" ! smallSidebarButton" x-transition.delay.360ms class="flex gap-3">
+                            <span id=""
+                                class="notif h-4 w-4 font-bold flex justify-center items-center rounded-full text-[.70rem] pb-[.05rem] bg-green-500">5</span>
+                            <i id="dropdownMenuIcon"
+                                :class="showEmployeeDropdown ? 'fa fa-sort-up translate-y-[.30rem]' : 'fa fa-sort-down -translate-y-[.10rem]' "></i>
+                        </span>
+                    </span>
+
+                    <!-- dropdown -->
+                    <div id=" dropdownMenuItem" x-show="showEmployeeDropdown"
+                        class="lg:w-[90%] lg:translate-x-2 list-disc text-xs shadow-inner text-white/80 py-2 w-full rounded-md bg-slate-700/20 border border-t-blue-600 border-x-blue-600 border-b-red-500/10  px-2">
+
+                        <div class="flex flex-col gap-1">
+
+                            <a href="" class="font-medium"><i class="fa fa-link pr-1"></i>Personal information</a>
+
+                        </div>
+
+                    </div>
+                    <!-- end dropdown -->
+
+                    <span x-show="smallSidebarButton == false" x-id="['text-input']"
+                        @click=" showTimeAttendanceDropdown=! showTimeAttendanceDropdown"
+                        class=" text-xs cursor-pointer py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-spin fa-clock-o"></i><span
+                                x-show=" ! smallSidebarButton" x-transition.delay.360ms>Time Attendance</span></span>
+                        <span x-show=" ! smallSidebarButton" x-transition.delay.360ms class="flex gap-3">
+                            <span id=""
+                                class="notif h-4 w-4 font-bold flex justify-center items-center rounded-full text-[.70rem] pb-[.05rem] bg-green-500">5</span>
+                            <i id="dropdownMenuIcon"
+                                :class="showTimeAttendanceDropdown? 'fa fa-sort-up translate-y-[.30rem]' : 'fa fa-sort-down -translate-y-[.10rem]' "></i>
+                        </span>
+                    </span>
+
+                    <!-- dropdown -->
+                    <div id=" dropdownMenuItem" x-show="showTimeAttendanceDropdown"
+                        class="lg:w-[90%] lg:translate-x-2 list-disc text-xs shadow-inner text-white/80 py-2 w-full rounded-md bg-slate-700/20 border border-t-blue-600 border-x-blue-600 border-b-red-500/10  px-2">
+
+                        <div class="flex flex-col gap-2">
+
+                            <a href="" class="font-medium"><i class="fa fa-link pr-1"></i>Attendance archive</a>
+                            <a href="" class="font-medium"><i class="fa fa-link pr-1"></i>Annual leave</a>
+
+                        </div>
+
+                    </div>
+                    <!-- end dropdown -->
+
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-tasks"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Task</span></span>
+                        <span x-show=" ! smallSidebarButton" x-transition.delay.360ms
+                            class="notif h-4 w-4 font-bold flex justify-center items-center rounded-full text-[.70rem] pb-[.05rem] bg-green-500">5</span>
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-money"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Payroll</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <span x-show="smallSidebarButton == false" id="dropdownMenu"
+                        @click="showDropdownOne = ! showDropdownOne"
+                        class=" text-xs cursor-pointer py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-list-ul"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Dropdown</span></span>
+                        <span x-show=" ! smallSidebarButton" x-transition.delay.360ms class="flex gap-3">
+                            <span id=""
+                                class="notif h-4 w-4 font-bold flex justify-center items-center rounded-full text-[.70rem] pb-[.05rem] bg-green-500">5</span>
+                            <i id="dropdownMenuIcon"
+                                :class="showDropdownOne ? 'fa fa-sort-up translate-y-[.30rem]' : 'fa fa-sort-down -translate-y-[.10rem]' "></i>
+                        </span>
+                    </span>
+
+
+                    <!-- dropdown -->
+                    <div id=" dropdownMenuItem" x-show="showDropdownOne"
+                        class="lg:w-[90%] lg:translate-x-2 list-disc text-xs shadow-inner text-white/80 py-2 w-full rounded-md bg-slate-700/20 border border-t-blue-600 border-x-blue-600 border-b-red-500/10  px-2">
+
+                        <div class="flex flex-col gap-1">
+
+                            <a href="" class="font-medium"><i class="fa fa-link pr-1"></i>Menu</a>
+
+                            <details>
+                                <summary class="cursor-pointer"><span class="px-1 font-medium">More</span></summary>
+                                <div
+                                    class="p-1 flex flex-col [&>a]:rounded [&>a]:py-1 [&>a]:px-2 hover:[&>a]:bg-slate-300/40">
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                    <a href="" class="text-xs font-medium"><i
+                                            class="fa text-[.60rem] fa-link pr-1"></i>Teruskan</a>
+                                </div>
+                            </details>
+
+                        </div>
+
+                    </div>
+                    <!-- end dropdown -->
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-shield"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Reimbursment</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-signal"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Performance</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-handshake-o"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Recruitment</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-graduation-cap"></i><span
+                                x-show=" ! smallSidebarButton" x-transition.delay.360ms>Training</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-book"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Report</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <a href=""
+                        class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                class="mr-3 w-3 text-center fa fa-sitemap"></i><span x-show=" ! smallSidebarButton"
+                                x-transition.delay.360ms>Structure
+                                Organization</span></span>
+                        <!-- notif here -->
+                    </a>
+
+                    <!-- account menu section -->
+                    <span class="text-white text-xs mt-5"><span x-show=" ! smallSidebarButton"
+                            x-transition.delay.360ms>Account</span></span>
+                    <div class="menu-link text-white w-full mt-1 flex flex-col gap-1">
+
+                        <a href=""
+                            class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                    class="mr-3 w-3 text-center fa fa-user"></i><span x-show=" ! smallSidebarButton"
+                                    x-transition.delay.360ms>Profile</span></span>
+                            <!-- notif here -->
+                        </a>
+
+                        <a href=""
+                            class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                    class="mr-3 w-3 text-center fa fa-spin fa-gear"></i><span
+                                    x-show=" ! smallSidebarButton" x-transition.delay.360ms>Setting</span></span>
+                            <!-- notif here -->
+                        </a>
+
+                        <a href=""
+                            class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                    class="mr-3 w-3 text-center fa fa-universal-access"></i><span
+                                    x-show=" ! smallSidebarButton" x-transition.delay.360ms>Permission</span></span>
+                            <!-- notif here -->
+                        </a>
+
+                        <a href=""
+                            class="text-xs py-1 lg:pl-2 px-2 pr-3 w-full flex flex-row justify-between items-center transition-all duration-200 ease-in-out hover:bg-slate-100/30 rounded-md lg:rounded-r-none "><span><i
+                                    class="mr-3 w-3 text-center fa fa-sign-out"></i><span x-show=" ! smallSidebarButton"
+                                    x-transition.delay.360ms>Logout</span></span>
+                            <!-- notif here -->
+                        </a>
+
+                        <!-- search bar sidebar -->
+                        <form class="mt-2 md:hidden">
+
+                            <label for="default-search"
+                                class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+                            <div class="relative w-full">
+
+                                <div
+                                    class="absolute opacity-40 inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+
+                                <input type="text" id="default-search"
+                                    class="block w-full pl-10 py-2 pr-2 text-xs cursor-pointer bg-gray-300 rounded-full placeholder-gray-400/80 text-slate-500 outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Search">
+
+                            </div>
+
+                        </form>
+                        <!-- end search bar sidebar -->
+
+                    </div>
+                    <!-- end account menu section -->
+                </div>
+            </div>
+            <!-- end sidebar menu list -->
+
+        </aside>
+        <!-- end sidebar -->
+
+        <div class="w-full  z-50">
+
+            <!-- navbar -->
+            <nav @resize.window="
+            width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            if (width <= 1250) {
+                smallSidebarButton = true
+                if (width <= 1024) {
+                    smallSidebarButton = ! smallSidebarButton
+                }
+            } 
+            " :class="themeIndex == 2 ? 'bg-gradient-to-r from-gray-800  via-gray-700 to-gray-800' : themeIndex == 3 ? 'bg-white dark:bg-gradient-to-r dark:from-gray-800  dark:via-gray-700 dark:to-gray-800' : 'bg-white' "
+                class=" w-full h-14 z-40
+                transition-all duration-500 ease-in-out shadow flex flex-row justify-between px-5 items-center
+                sticky top-0">
+
+                <!-- small sidebar button -->
+                <div id="smallSidebarButton" @click="smallSidebarButton=! smallSidebarButton, showDropdownOne = false "
+                    class="hidden lg:inline-block overflow-hidden rounded-md cursor-pointer -translate-x-8 :bg-indigo-50 bg-white w-6 h-6 shadow-lg border text-red-500 border-red-500 hover:text-blue-500 hover:border-blue-500">
+                    <div id="smallSidebarIcon"
+                        :class="smallSidebarButton ? '-translate-x-[0.96rem]' : 'translate-x-[0.96rem]'"
+                        class="h-full w-full flex justify-center items-center space-x-6 transition-all duration-300 ease-in-out">
+                        <i class=" text-sm fa fa-angle-double-left"></i>
+                        <i class=" text-sm fa fa-angle-double-right"></i>
+                    </div>
+                </div>
+                <!-- end small sidebar button -->
+
+                <!-- burger menu -->
+                <div id="burgerButton" @click=" smallSidebarButton = false"
+                    class="burger-menu lg:hidden h-6 w-8 flex flex-col justify-between cursor-pointer" title="menu">
+                    <div :class="themeIndex == 2 ? 'bg-white' : themeIndex == 3 ? 'dark:bg-white' : 'bg-blue-800' "
+                        class="burger-line w-full h-1 rounded-full"></div>
+                    <div :class="themeIndex == 2 ? 'bg-white' : themeIndex == 3 ? 'dark:bg-white' : 'bg-blue-800' "
+                        class="burger-line w-[70%] h-1 rounded-full"></div>
+                    <div :class="themeIndex == 2 ? 'bg-white' : themeIndex == 3 ? 'dark:bg-white' : 'bg-blue-800' "
+                        class="burger-line w-[40%] h-1 rounded-full"></div>
+                </div>
+                <!-- end burger menu -->
+
+                <!-- search bar -->
+                <form class="hidden md:block">
+
+                    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+                    <div class="relative lg:w-96 md:w-72 w-52">
+
+                        <div class="absolute opacity-40 inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+
+                        <input type="text" id="default-search"
+                            class="block w-full pl-10 py-2 pr-2 text-xs cursor-pointer placeholder:font-normal bg-gray-100 rounded-full placeholder-gray-400/60 text-gray-700 font-medium border outline-none transition-all duration-300 ease-linear focus:border-gray-500"
+                            placeholder="Search" autofocus autocomplete="false">
+
+                    </div>
+
+                </form>
+                <!-- end search bar -->
+
+                <!-- account -->
+                <div :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'dark:text-white' : ''  "
+                    class=" flex flex-row gap-3 translate-x-4 scale-75 sm:scale-100 sm:translate-x-0 justify-center items-center">
+
+                    <span class="mx-2 scale-125 lg:scale-110 cursor-pointer">
+                        <!-- bell no notif -->
+                        <!-- <svg class="w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path :class="themeIndex == 2 ? 'stroke-white' : themeIndex == 3 ? 'stroke-black dark:stroke-white' : 'stroke-black'" d="M18 8.4C18 6.70261 17.3679 5.07475 16.2426 3.87452C15.1174 2.67428 13.5913 2 12 2C10.4087 2 8.88258 2.67428 7.75736 3.87452C6.63214 5.07475 6 6.70261 6 8.4C6 15.8667 3 18 3 18H21C21 18 18 15.8667 18 8.4Z"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path :class="themeIndex == 2 ? 'stroke-white' : themeIndex == 3 ? 'stroke-black dark:stroke-white' : 'stroke-black'" d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg> -->
+                        <!-- end bell no notif -->
+                        
+                        <!-- bell notif -->
+                        <span class="relative">
+                            <span class="bg-yellow-400 rounded-full grid place-items-center font-medium w-4 h-4 absolute -top-2 -right-[.4rem] text-[6pt] text-black">67</span>
+                            <svg class="w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path :class="themeIndex == 2 ? 'stroke-white' : themeIndex == 3 ? 'stroke-black dark:stroke-white' : 'stroke-black'" d="M18.1336 11C18.7155 16.3755 21 18 21 18H3C3 18 6 15.8667 6 8.4C6 6.70261 6.63214 5.07475 7.75736 3.87452C8.88258 2.67428 10.4087 2 12 2C12.3373 2 12.6717 2.0303 13 2.08949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path :class="themeIndex == 2 ? 'stroke-white' : themeIndex == 3 ? 'stroke-black dark:stroke-white' : 'stroke-black'" d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path :class="themeIndex == 2 ? 'stroke-white' : themeIndex == 3 ? 'stroke-black dark:stroke-white' : 'stroke-black'" d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <!-- end bell notif -->
+                    </span>
+                    <div class="flex flex-row justify-center items-center gap-2">
+                        <div
+                            class="avatar h-8 w-8 bg-slate-300 grid place-items-center border rounded-full overflow-hidden">
+                            <img src="img/bannerPhoto.png" width="20px" alt="">
+                        </div>
+                        <span class="text-xs">Profile</span>
+                        <i id="profileMenu" class="p-2 fa fa-sort-down -translate-y-[.15rem] cursor-pointer"></i>
+                    </div>
+
+
+                </div>
+                <!-- end account -->
+
+            </nav>
+            <!-- end navbar -->
+
+            <!-- content -->
+            <section
+                :class="themeIndex == 2 ? 'bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800' : themeIndex == 3 ? 'bg-slate-200/50 dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-700 dark:to-gray-800' : 'bg-slate-200/50' "
+                class="min-h-screen py-7 px-2 md:px-4 lg:px-7 flex flex-col w-full">
+
+                <div class="mb-5 px-3 py-1">
+                    <h3 :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                        class="text-base font-medium">
+                        Formulir Permintaan
+                        Cuti</h3>
+                    <span class="breadcrumb text-[.50rem] relative -top-2 md:-top-1 lg:-top-0 lg:text-xs text-gray-400 font-medium">Home <i
+                            class="mx-1 font-bold fa fa-angle-right"></i>
+                        Formulir Permintaan Cuti</span>
+
+                </div>
+
+                <form action=""
+                    :class="themeIndex == 2 ? 'bg-transparent' : themeIndex == 3 ? 'bg-white dark:bg-transparent' : 'bg-white' "
+                    class="rounded-md flex flex-col py-5 px-6 -z-1 border w-full shadow-xl">
+
+                    <!-- Form -->
+                    <div class="w-full min-h-screen flex flex-col lg:flex-row-reverse">
+
+                        <div class="w-full order-2">
+
+                            <label class="inline-flex items-center select-none cursor-pointer">
+                                <input type="checkbox"
+                                    class="lg:w-4 lg:h-4 cursor-pointer outline-blue-600 accent-blue-600 border-0 rounded-md focus:ring-0"
+                                    x-model="changeDate" />
+                                <span
+                                    :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                                    class="ml-2 text-xs lg:text-sm">Menggunakan
+                                    Kalender</span>
+                            </label>
+
+                            <!-- multiple date picker -->
+                            <div x-show="changeDate" class="my-4">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-400 dark:text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+
+                                        <input name="datePick" id="datePick" type="text" 
+                                        :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
+                                        class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
+                                        placeholder="Pilih tanggal" :required="changeDate">
+                                </div>
+                            </div>
+                            <!-- end multiple date picker -->
+
+                            <!-- date range picker -->
+                            <div x-show="!changeDate" date-rangepicker
+                                class="flex my-4 justify-between select-none items-center">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-400 dark:text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <input name="start" type="text" 
+                                    :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
+                                        class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
+                                        placeholder="Awal" :required="!changeDate" autocomplete="false">
+                                </div>
+                                <span
+                                class="mx-4 text-gray-500 ">Sampai</span>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-400 dark:text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <input name="end" type="text"
+                                    :class="themeIndex == 2 ? 'bg-gray-700 border-gray-600 placeholder-gray-400 text-white' : themeIndex == 3 ? 'border-gray-600 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' : 'border-gray-600 text-gray-900'  "
+                                        class="bg-white/5 border  outline-none text-sm rounded-lg block w-full pl-10 p-2.5 "
+                                        placeholder="Akhir" :required="!changeDate">
+                                </div>
+                            </div>
+                            <!-- end date range picker -->
+
+
+                            <div>
+
+                                <select class=" hidden" name="" id="" required>
+                                    <option :value="leaveTypes" class="text-black" x-text="leaveTypes"></option>
+                                </select>
+
+                                <div id="leaveTypeBtn" 
+                                :class="themeIndex == 2 ? leaveTypes != '' ? 'text-white border-dotted border-gray-400' : 'text-gray-400 border-dotted border-gray-400' : themeIndex == 3 ? leaveTypes != '' ? 'text-black dark:text-white border-gray-700 dark:border-dotted dark:border-gray-400' : 'dark:text-gray-400 border-gray-700 dark:border-dotted dark:border-gray-400 text-gray-500' : leaveTypes != '' ? 'text-black border-gray-700' : 'text-gray-700 border-gray-700' "
+                                    class="w-full py-2 shadow-sm text-xs font-medium lg:text-sm border-dotted bg-transparent border text-center cursor-pointer rounded-md">
+                                    <span  x-text="leaveTypes == '' ? 'Pilih Jenis cuti' : leaveTypes"></span><i
+                                        class="fa fa-angle-down translate-x-2 font-bold"></i>
+                                </div>
+
+                                <div id="leaveTypeSection" style="display: none;" class="">
+                                    
+                                    <div x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 scale-90"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-300"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-90"
+                                    :class="themeIndex == 2 ? 'dark:text-white' : themeIndex == 3 ? 'text-gray-700 dark:text-white' : 'text-gray-700'   "
+                                    class="transition-all backdrop-blur-md border-gray-600 rounded-md flex flex-col gap-1 hover:[&>p]:bg-white/10 [&>p]:px-3 [&>p]:py-1 [&>p]:rounded-md [&>p]:cursor-pointer bg-transparent border border-dotted p-2">
+                                <p @click="leaveTypes = '2 Hari' ">2 Hari</p>
+                                <p @click="leaveTypes = '3 Hari' ">3 Hari</p>
+                                <p @click="leaveTypes = '4 Hari' ">4 Hari</p>
+                                <p @click="leaveTypes = 'Cuti Tahunan (ANL) - 10 Hari' ">Cuti Tahunan (ANL) - 10 Hari</p>
+                                <p @click="leaveTypes = '' ">Batal</p>
+                            </div>
+
+                                </div>
+
+
+                                <p :class="leaveTypes == '' ? 'opacity-100' : 'opacity-0'"
+                                    class="text-red-500 px-2 text-[.60rem] bg-black/5 idark:bg-black/10 lg:py-1 rounded lg:rounded-md font-medium mt-1 lg:mt-2 w-fit transition-all duration-300 lg:text-xs text-center">
+                                    Anda belum memilih jenis cuti</p>
+
+                            </div>
+
+                            <div x-show="leaveTypes == '' ? false : true"
+                            :class="themeIndex == 2 ? 'text-white/60 border-white/30 border-dotted' : themeIndex == 3 ? 'text-gray-500 border-gray-300 dark:text-white/60 dark:border-white/30 dark:border-dotted' : 'text-gray-500 border-gray-300' "
+                                class="w-full py-1 px-2 text-xs 0 h-14 mt-1 bg-transparent border rounded-md ">
+                                <p>Your Leave Period <span class="text-red-500 font-bold">IS INACTIVE:</span></p>
+                                <p>24-Jan-2024 To 23-Apr-2005</p>
+                                <p>Dan total sisa cuti anda adalah : 10 Hari</p>
+                            </div>
+
+                            <p 
+                            :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                            class="mt-3 mb-2 text-sm lg:text-base">Alasan <span
+                                    class="text-red-600">*</span>
+                            </p>
+                            <textarea name="" id=""
+                            :class="themeIndex == 2 ? 'text-white border-dotted' : themeIndex == 3 ? 'text-black dark:border-dotted dark:text-white' : 'text-black border-gray-600' "
+                                class="bg-white/[0.02] text-sm outline-none w-full h-52 border resize-none py-1 px-3 rounded-md"
+                                required>Urusan keluarga</textarea>
+
+                            <div class="text-black my-3">
+
+                                <select class=" hidden" name="" id="">
+                                    <option :value="pjs" class="" x-text="pjs"></option>
+                                </select>
+
+                                
+                                <div id="pjsBtn" 
+                                :class="themeIndex == 2 ? pjs != '' ? 'text-white border-dotted border-gray-400' : 'text-gray-400 border-dotted border-gray-400' : themeIndex == 3 ? pjs != '' ? 'text-black dark:text-white border-gray-700 dark:border-dotted dark:border-gray-400' : 'dark:text-gray-400 border-gray-700 dark:border-dotted dark:border-gray-400 text-gray-500' : pjs != '' ? 'text-black border-gray-700' : 'text-gray-700 border-gray-700' "
+                                    class="w-full py-2 shadow-sm text-xs font-medium lg:text-sm border-dotted bg-transparent border text-center cursor-pointer rounded-md">
+                                    <span  x-text="pjs == '' ? 'Pilih PJS' : pjs"></span><i
+                                        class="fa fa-angle-down translate-x-2 font-bold"></i>
+                                </div>
+
+                                <div id="pjsSection" style="display: none;">
+
+                                    <div x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 scale-90"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-300"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-90"
+                                    :class="themeIndex == 2 ? 'dark:text-white' : themeIndex == 3 ? 'text-gray-700 dark:text-white' : 'text-gray-700'   "
+                                    class="transition-all backdrop-blur-md border-gray-600 rounded-md flex flex-col gap-1 hover:[&>p]:bg-white/10 [&>p]:px-3 [&>p]:py-1 [&>p]:rounded-md [&>p]:cursor-pointer bg-transparent border border-dotted p-2">
+                                <p @click="pjs = 'Miah Said [D450144]' ">Miah Said [D450144]</p>
+                                <p @click="pjs = 'Name 2' ">Name 2</p>
+                                <p @click="pjs = 'Name 3' ">Name 3</p>
+                                <p @click="pjs = 'Name 4' ">Name 4</p>
+                                <p @click="pjs = '' ">Batal</p>
+                            </div>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                            :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                            class="my-3 leading-[.1rem]">
+
+                                <p class="text-sm lg:text-base">Duties & Responsibility</p>
+                                <p class="text-xs font-medium">TO BE TRANSFERRED</p>
+                                <span 
+                            :class="themeIndex == 2 ? 'text-white/50' : themeIndex == 3 ? 'text-gray-500 dark:text-white/50' : 'text-gray-500' "
+                                class="text-[.60rem] italic text-gray-500 leading-3">( Please explain
+                                    your duties and
+                                    to
+                                    whorm
+                                    it will be
+                                    transferred during your leave
+                                    period )</span>
+
+                            </div>
+
+                            <textarea name="" id=""
+                            :class="themeIndex == 2 ? 'text-white border-dotted' : themeIndex == 3 ? 'text-black dark:border-dotted dark:text-white' : 'text-black border-gray-600' "
+
+                                class="bg-white/[0.02] text-sm outline-none w-full h-52 border resize-none py-1 px-3 rounded-md">- arship berkas
+- menginput ... </textarea>
+
+                            <p
+                            :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                            class="mt-3 mb-2 text-sm lg:text-base">Informasi Jika Akan
+                                Dihubungi
+                            </p>
+                            <textarea name="" id=""
+                            :class="themeIndex == 2 ? 'text-white border-dotted' : themeIndex == 3 ? 'text-black dark:border-dotted dark:text-white' : 'text-black border-gray-600' "
+                            
+                                class="bg-white/[0.02] text-sm outline-none w-full h-52 border resize-none py-1 px-3 rounded-md">08**********</textarea>
+
+                            <div class="btns flex mt-2 justify-between">
+
+                                <div class="btn flex gap-2">
+
+
+                                    <button
+                                    class="transition-all duration-200 py-1 px-3 text-xs md:text-sm lg:text-base bg-blue-600 hover:bg-blue-700 active:bg-blue-900  font-medium rounded text-white">Simpan</button>
+                    
+                                    <button
+                                        class="transition-all duration-200 py-1 px-3 text-xs md:text-sm lg:text-base bg-gray-600 hover:bg-gray-700 active:bg-black font-medium rounded text-white">
+                                        Draft</button>
+
+                                </div>
+
+                                <div class="btn flex gap-2">
+
+                                    <button
+                                        class="transition-all duration-200 py-1 px-3 text-xs md:text-sm lg:text-base bg-red-700 hover:bg-red-800 active:bg-red-900 font-medium rounded text-white">Cancel</button>
+
+                                    <button
+                                        class="transition-all duration-200 py-1 px-3 text-xs md:text-sm lg:text-base bg-yellow-400 hover:bg-yellow-600 active:bg-yellow-700 font-medium rounded text-white">Reset</button>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <!-- end Form -->
+
+
+
+                        <sidebar class="text-gray-400 w-full py-5 lg:translate-y-4 px-10 order-1">
+                            <div class="lg:sticky top-20">
+
+                                <h3 class="text-xs lg:text-base">Devisi : <span
+                                    :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                                    >Economy
+                                        Faculty</span>
+                                </h3>
+                                <h3 class="text-xs lg:text-base">Nama : <span
+                            :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' ">A.
+                                        Baso
+                                        [00016154]</span>
+                                </h3>
+                                <h3 class="text-xs lg:text-base">No. Surat Permintaan Cuti : <span
+                                    :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+                                    >EGLR-MMYYxxxxx</span>
+                                </h3>
+
+                            </div>
+
+                        </sidebar>
+
+                    </div>
+
+                </form>
+            </section>
+            <!-- end content -->
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@5"></script>
+    <script>
+        const menu = document.querySelector('#menu')
+        const closeMenu = document.querySelector('#closeMenu')
+        const burgerButton = document.querySelector('#burgerButton')
+
+        const profileMenuSection = `
+        <div :class="themeIndex == 2 ? 'bg-gray-800 text-white' : themeIndex == 3 ? 'text-black bg-white dark:text-white dark:bg-gray-800' : 'text-black bg-white' "
+        x-data="{ themeSelect: 1 }" x-modelable="themeSelect" x-model="themeIndex" class="shadow-md fixed top-10 -right-14 md:top-5 md:-right-2 lg:top-5 lg:-right-3 px-2 py-2 rounded-md flex flex-col justify-center items-center gap-1" id="profileMenuSection">
+            <a href="" 
+            :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' "
+            class="px-4 py-1 rounded transition-all duration-200 hover:bg-gray-200/40">Beranda</a>
+            <span :class="themeIndex == 2 ? 'text-white' : themeIndex == 3 ? 'text-black dark:text-white' : 'text-black' " 
+            class="w-full py-1 flex justify-center items-center transition-all duration-200 hover:bg-gray-200/40 rounded cursor-pointer"  @click="themeSelect >= 3 ? themeSelect = 1 : themeSelect++ ">
+                <i :class="themeIndex == 2 ? 'fa-moon-o' : themeIndex == 3 ? 'fa-desktop' : 'fa-sun-o' " class="text-xl fa"></i>
+            </span>
+        </div>
+        `;
+
+        tippy('#profileMenu', {
+            content: profileMenuSection,
+            placement: 'bottom',
+            interactive: true,
+            allowHTML: true,
+            arrow: false,
+            trigger: 'click',
+            theme: 'light',
+            hideOnClick: true,
+        });
+
+        const leaveTypeSection = document.querySelector('#leaveTypeSection')
+        tippy('#leaveTypeBtn', {
+            content: leaveTypeSection.innerHTML,
+            placement: 'bottom',
+            interactive: true,
+            allowHTML: true,
+            arrow: false,
+            // trigger: 'hover',
+            theme: 'light',
+            hideOnClick: true
+        });
+
+        const pjsSection = document.querySelector('#pjsSection');
+
+        tippy('#pjsBtn', {
+            content: pjsSection.innerHTML,
+            placement: 'bottom',
+            interactive: true,
+            allowHTML: true,
+            arrow: false,
+            // trigger: 'hover',
+            theme: 'light',
+            hideOnClick: true
+        });
+
+        burgerButton.addEventListener('click', () => {
+            menu.classList.remove('-translate-x-full')
+        })
+
+        closeMenu.addEventListener('click', () => {
+            menu.classList.add('-translate-x-full')
+        })
+
+
+
+        document.querySelector('#datePick').addEventListener("keydown", function (event) {
+            if (event.keyCode === 8 || event.key === "/") {
+                event.preventDefault();
+            }
+        });
+        document.querySelector('#datePick').addEventListener("paste", function (event) {
+            event.preventDefault();
+        });
+        document.querySelector('#datePick').addEventListener("drop", function (event) {
+            event.preventDefault();
+        });
+        document.querySelector('#datePick').addEventListener("keypress", function (event) {
+            var keyCode = event.keyCode || event.which;
+            if (keyCode >= 48 && keyCode <= 57) {
+                event.preventDefault();
+            }
+        });
+        document.querySelector('#datePick').addEventListener("cut", (event) => {
+            event.preventDefault();
+        });
+        document.querySelector('#datePick').addEventListener("dragstart", (event) => {
+            event.preventDefault();
+        });
+        document.querySelector('#datePick').addEventListener("input", (event) => {
+            const value = event.target.value;
+            const asciiOnly = /^[\x00-\x7F]*$/;
+
+            if (!asciiOnly.test(value)) {
+                event.target.value = value.replace(/[^\x00-\x7F]/g, "");
+            }
+        });
+
+
+
+        $(document).ready(function () {
+            $('#datePick').multiDatesPicker({
+dateFormat: "yy-mm-dd"});
+        });
+        // document.querySelector('#ui-datepicker-div').style.setProperty('z-index', '999 !important')
+        // console.log(gh);
+
+    </script>
+
+</body>
+
+</html>
